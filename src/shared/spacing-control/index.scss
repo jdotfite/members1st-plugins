@@ -1,0 +1,27 @@
+.spacing-controls {
+    &__section-title {
+        font-size: 13px;
+        margin: 0;
+        font-weight: 500;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    &__margins,
+    &__padding {
+        margin-bottom: 24px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // Adjust select control spacing
+    .components-select-control {
+        margin-bottom: 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "members1st/custom-button-showcase",
+    "version": "0.1.0",
+    "title": "Custom Button Showcase",
+    "category": "widgets",
+    "icon": "smiley",
+    "description": "Example block showcasing button styles.",
+    "example": {},
+    "supports": {
+        "html": false
+    },
+    "textdomain": "members1st",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.scss",
+    "style": "file:./style.scss",
+    "viewScript": "file:./view.js"
+}

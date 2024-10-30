@@ -1,0 +1,102 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "members1st/custom-button",
+    "title": "Custom Button",
+    "category": "design",
+    "icon": "button",
+    "description": "A customizable button block.",
+    "supports": {
+        "html": false
+    },
+    "attributes": {
+        "content": {
+            "type": "string",
+            "default": "Button"
+        },
+        "size": {
+            "type": "string",
+            "default": "md"
+        },
+        "style": {
+            "type": "string",
+            "default": "primary"
+        },
+        "position": {
+            "type": "string",
+            "default": "left"
+        },
+        "uppercase": {
+            "type": "boolean",
+            "default": true
+        },
+        "url": {
+            "type": "string",
+            "default": "#"
+        },
+        "width": {
+            "type": "string",
+            "default": "normal"
+        },
+        "icon": {
+            "type": "object",
+            "default": null
+        },
+        "iconPosition": {
+            "type": "string",
+            "default": "left"
+        },
+        "target": {
+            "type": "string",
+            "default": "_self"
+        },
+        "rel": {
+            "type": "string",
+            "default": ""
+        },
+        "ariaLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "customClass": {
+            "type": "string",
+            "default": ""
+        },
+        "marginTop": {
+            "type": "string",
+            "default": ""
+        },
+        "marginRight": {
+            "type": "string",
+            "default": ""
+        },
+        "marginBottom": {
+            "type": "string",
+            "default": ""
+        },
+        "marginLeft": {
+            "type": "string",
+            "default": ""
+        },
+        "paddingTop": {
+            "type": "string",
+            "default": ""
+        },
+        "paddingRight": {
+            "type": "string",
+            "default": ""
+        },
+        "paddingBottom": {
+            "type": "string",
+            "default": ""
+        },
+        "paddingLeft": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "textdomain": "members1st",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.scss",
+    "style": "file:./style.scss"
+}
