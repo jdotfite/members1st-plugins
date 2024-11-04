@@ -8,6 +8,8 @@
  * Text Domain: members1st
  */
 
+namespace Members1st;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -20,35 +22,36 @@ define('MEMBERS1ST_BLOCKS_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('MEMBERS1ST_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /**
- * Enqueue block assets.
+ * Auto enqueue all block assets
  */
-function members1st_blocks_enqueue_assets() {
-    // Custom Button styles
-    if (file_exists(MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks/custom-button/style-index.css')) {
-        wp_enqueue_style(
-            'members1st-custom-button',
-            MEMBERS1ST_BLOCKS_PLUGIN_URL . 'build/blocks/custom-button/style-index.css',
-            [],
-            filemtime(MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks/custom-button/style-index.css')
-        );
-    }
-    
-    // Showcase block styles
-    if (file_exists(MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks/custom-button-showcase/style-index.css')) {
-        wp_enqueue_style(
-            'members1st-custom-button-showcase',
-            MEMBERS1ST_BLOCKS_PLUGIN_URL . 'build/blocks/custom-button-showcase/style-index.css',
-            [],
-            filemtime(MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks/custom-button-showcase/style-index.css')
-        );
+function enqueue_block_assets() {
+    $blocks_dir = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks';
+    if (!is_dir($blocks_dir)) return;
+
+    // Get all block directories
+    $blocks = array_filter(scandir($blocks_dir), function($item) use ($blocks_dir) {
+        return is_dir($blocks_dir . '/' . $item) && !in_array($item, ['.', '..']);
+    });
+
+    // Enqueue each block's style
+    foreach ($blocks as $block) {
+        $style_file = $blocks_dir . '/' . $block . '/style-index.css';
+        if (file_exists($style_file)) {
+            wp_enqueue_style(
+                "members1st-{$block}",
+                MEMBERS1ST_BLOCKS_PLUGIN_URL . "build/blocks/{$block}/style-index.css",
+                [],
+                filemtime($style_file)
+            );
+        }
     }
 }
-add_action('wp_enqueue_scripts', 'members1st_blocks_enqueue_assets');
+add_action('wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_block_assets');
 
 /**
- * Enqueue block editor assets.
+ * Auto enqueue all block editor assets
  */
-function members1st_blocks_enqueue_block_editor_assets() {
+function enqueue_block_editor_assets() {
     $deps = [
         'wp-blocks',
         'wp-i18n',
@@ -59,28 +62,76 @@ function members1st_blocks_enqueue_block_editor_assets() {
         'wp-plugins'
     ];
 
-    // Custom Button script
-    wp_enqueue_script(
-        'members1st-custom-button',
-        MEMBERS1ST_BLOCKS_PLUGIN_URL . 'build/blocks/custom-button/index.js',
-        $deps,
-        filemtime(MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks/custom-button/index.js'),
-        true
-    );
+    $blocks_dir = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks';
+    if (!is_dir($blocks_dir)) return;
 
-    // Showcase block script
-    wp_enqueue_script(
-        'members1st-custom-button-showcase',
-        MEMBERS1ST_BLOCKS_PLUGIN_URL . 'build/blocks/custom-button-showcase/index.js',
-        array_merge($deps, ['members1st-custom-button']),
-        filemtime(MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks/custom-button-showcase/index.js'),
-        true
-    );
+    // Get all block directories
+    $blocks = array_filter(scandir($blocks_dir), function($item) use ($blocks_dir) {
+        return is_dir($blocks_dir . '/' . $item) && !in_array($item, ['.', '..']);
+    });
+
+    // Enqueue each block's script
+    foreach ($blocks as $block) {
+        $script_file = $blocks_dir . '/' . $block . '/index.js';
+        if (file_exists($script_file)) {
+            wp_enqueue_script(
+                "members1st-{$block}",
+                MEMBERS1ST_BLOCKS_PLUGIN_URL . "build/blocks/{$block}/index.js",
+                $deps,
+                filemtime($script_file),
+                true
+            );
+        }
+    }
 }
-add_action('enqueue_block_editor_assets', 'members1st_blocks_enqueue_block_editor_assets');
+add_action('enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_block_editor_assets');
 
-// Load block PHP files
-require_once MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'src/blocks/custom-button/index.php';
-require_once MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'src/blocks/custom-button-showcase/index.php';
-require_once MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'src/features/color-mode-toggle/index.php';
-require_once MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'src/shared/spacing-control/index.php';
+/**
+ * Auto load all PHP files from blocks and features
+ */
+function auto_load_components() {
+    $src_dir = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'src';
+    
+    // Load Features
+    $features_dir = $src_dir . '/features';
+    if (is_dir($features_dir)) {
+        $features = array_filter(scandir($features_dir), function($item) use ($features_dir) {
+            return is_dir($features_dir . '/' . $item) && !in_array($item, ['.', '..']);
+        });
+
+        foreach ($features as $feature) {
+            $feature_file = $features_dir . '/' . $feature . '/index.php';
+            if (file_exists($feature_file)) {
+                require_once $feature_file;
+                do_action('members1st_feature_loaded', $feature);
+            }
+        }
+    }
+
+    // Load Blocks PHP files
+    $blocks_dir = $src_dir . '/blocks';
+    if (is_dir($blocks_dir)) {
+        $blocks = array_filter(scandir($blocks_dir), function($item) use ($blocks_dir) {
+            return is_dir($blocks_dir . '/' . $item) && !in_array($item, ['.', '..']);
+        });
+
+        foreach ($blocks as $block) {
+            $block_file = $blocks_dir . '/' . $block . '/index.php';
+            if (file_exists($block_file)) {
+                require_once $block_file;
+                do_action('members1st_block_loaded', $block);
+            }
+        }
+    }
+
+    do_action('members1st_components_loaded');
+}
+add_action('plugins_loaded', __NAMESPACE__ . '\auto_load_components');
+
+/**
+ * Plugin activation hook
+ */
+register_activation_hook(__FILE__, __NAMESPACE__ . '\activate');
+function activate() {
+    // Code to run on activation, if needed.
+}

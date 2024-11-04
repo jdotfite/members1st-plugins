@@ -1,0 +1,62 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 2,
+    "name": "members1st/hero-full",
+    "title": "Hero Full",
+    "category": "design",
+    "icon": "cover-image",
+    "description": "A full-width hero section with background image and button.",
+    "supports": {
+        "html": false
+    },
+    "attributes": {
+        "backgroundImage": {
+            "type": "string",
+            "default": ""
+        },
+        "overlayOpacity": {
+            "type": "string",
+            "default": "opacity-0"
+        },
+        "darkModeOpacity": {
+            "type": "string",
+            "default": "opacity-0"
+        },
+        "headingText": {
+            "type": "string",
+            "default": "Main Heading"
+        },
+        "subheadingText": {
+            "type": "string",
+            "default": "Subheading"
+        },
+        "description": {
+            "type": "string",
+            "default": "Description text goes here"
+        },
+        "buttonText": {
+            "type": "string",
+            "default": "Learn More"
+        },
+        "buttonUrl": {
+            "type": "string",
+            "default": "#"
+        },
+        "buttonStyle": {
+            "type": "string",
+            "default": "primary"
+        },
+        "buttonSize": {
+            "type": "string",
+            "default": "lg"
+        },
+        "buttonWidth": {
+            "type": "string",
+            "default": "normal"
+        }
+    },
+    "textdomain": "members1st",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.scss",
+    "style": "file:./style.scss"
+}

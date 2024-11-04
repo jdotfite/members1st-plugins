@@ -2,7 +2,6 @@
 import { __ } from "@wordpress/i18n";
 import {
     InspectorControls,
-    RichText,
     useBlockProps,
     URLInput,
     MediaUpload,
@@ -12,16 +11,16 @@ import {
     PanelBody,
     SelectControl,
     ToggleControl,
-    Button,
+    Button as WPButton,
     TextControl,
 } from "@wordpress/components";
 
-import { SIZE_CLASSES, STYLE_CLASSES, POSITION_CLASSES, WIDTH_CLASSES } from "./constants";
+import { Button } from "@shared/button";
+import { POSITION_CLASSES } from "@shared/button/constants";
 import { SpacingControls } from "@shared/spacing-control";
 import "./editor.scss";
 
 export default function Edit({ attributes, setAttributes }) {
-    console.log('Edit Attributes:', attributes);
     const {
         content,
         size,
@@ -57,16 +56,6 @@ export default function Edit({ attributes, setAttributes }) {
         paddingBottom,
         paddingLeft,
     ].filter(Boolean).join(" ");
-
-    const buttonClasses = `
-        btn
-        ${SIZE_CLASSES[size]}
-        ${STYLE_CLASSES[style]}
-        ${uppercase ? "" : "normal-case"}
-        ${WIDTH_CLASSES[width]}
-        ${customClass}
-        ${spacingClasses}
-    `;
 
     const handleContentChange = (newContent) => {
         newContent = newContent.replace(/\n/g, "");
@@ -147,16 +136,16 @@ export default function Edit({ attributes, setAttributes }) {
                             allowedTypes={["image"]}
                             value={icon ? icon.id : ""}
                             render={({ open }) => (
-                                <Button onClick={open} isPrimary>
+                                <WPButton onClick={open} isPrimary>
                                     {icon ? __("Change Icon", "members1st") : __("Select Icon", "members1st")}
-                                </Button>
+                                </WPButton>
                             )}
                         />
                     </MediaUploadCheck>
                     {icon && (
-                        <Button isDestructive onClick={() => setAttributes({ icon: null })}>
+                        <WPButton isDestructive onClick={() => setAttributes({ icon: null })}>
                             {__("Remove Icon", "members1st")}
-                        </Button>
+                        </WPButton>
                     )}
                     <SelectControl
                         label={__("Icon Position", "members1st")}
@@ -192,27 +181,23 @@ export default function Edit({ attributes, setAttributes }) {
                     <SpacingControls attributes={attributes} setAttributes={setAttributes} />
                 </PanelBody>
             </InspectorControls>
+
             <div {...blockProps} className={`wp-block flex ${POSITION_CLASSES[position]}`}>
-                <a
-                    className={buttonClasses.trim()}
-                    href={url}
-                    {...(target ? { target: target } : {})}
-                    aria-label={ariaLabel}
-                >
-                    {icon && iconPosition === "left" && (
-                        <img src={icon.url} alt="" className="w-5 h-5 mr-2" />
-                    )}
-                    <RichText
-                        tagName="span"
-                        value={content}
-                        onChange={handleContentChange}
-                        placeholder={__("Add text…", "members1st")}
-                        allowedFormats={[]}
-                    />
-                    {icon && iconPosition === "right" && (
-                        <img src={icon.url} alt="" className="w-5 h-5 ml-2" />
-                    )}
-                </a>
+                <Button
+                    content={content}
+                    size={size}
+                    style={style}
+                    position={position}
+                    uppercase={uppercase}
+                    url={url}
+                    width={width}
+                    icon={icon}
+                    iconPosition={iconPosition}
+                    target={target}
+                    ariaLabel={ariaLabel}
+                    customClass={customClass}
+                    spacingClasses={spacingClasses}
+                />
             </div>
         </>
     );

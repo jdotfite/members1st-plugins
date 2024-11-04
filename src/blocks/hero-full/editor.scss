@@ -1,0 +1,21 @@
+// src/blocks/hero-full/editor.scss
+
+// Editor-specific styles
+.wp-block-members1st-hero-full {
+    // Reset block margin and padding in editor
+    margin: 0 !important;
+    padding: 0 !important;
+
+    // Ensure proper width in editor
+    width: 100% !important;
+    max-width: none !important;
+}
+
+// Style richtext placeholders
+[data-type="members1st/hero-full"] {
+    .rich-text {
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+    }
+}

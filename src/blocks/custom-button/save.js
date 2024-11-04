@@ -1,5 +1,7 @@
-﻿import { useBlockProps } from "@wordpress/block-editor";
-import { SIZE_CLASSES, STYLE_CLASSES, POSITION_CLASSES, WIDTH_CLASSES } from "./constants";
+﻿// src/blocks/custom-button/save.js
+import { useBlockProps } from "@wordpress/block-editor";
+import { Button } from "@shared/button";
+import { POSITION_CLASSES } from "@shared/button/constants";
 
 export default function Save({ attributes }) {
     const {
@@ -27,7 +29,6 @@ export default function Save({ attributes }) {
 
     const blockProps = useBlockProps.save();
     
-    // Fixed spacing classes to not include the prefix
     const spacingClasses = [
         marginTop,
         marginRight,
@@ -39,38 +40,23 @@ export default function Save({ attributes }) {
         paddingLeft,
     ].filter(Boolean).join(" ");
 
-    const buttonClasses = `
-        btn
-        ${SIZE_CLASSES[size]}
-        ${STYLE_CLASSES[style]}
-        ${uppercase ? 'uppercase' : ''}
-        ${WIDTH_CLASSES[width]}
-        ${spacingClasses}
-        ${customClass}
-    `.trim();
-
-    // Only add target and rel attributes for new tab links
-    const linkProps = {
-        className: buttonClasses,
-        href: url,
-        'aria-label': ariaLabel,
-        ...(target === '_blank' ? {
-            target: '_blank',
-            rel: 'noopener noreferrer'
-        } : {})
-    };
-
     return (
         <div {...blockProps} className={`flex ${POSITION_CLASSES[position]}`}>
-            <a {...linkProps}>
-                {icon && iconPosition === 'left' && (
-                    <img src={icon.url} alt="" className="w-5 h-5 mr-2" />
-                )}
-                <span>{content}</span>
-                {icon && iconPosition === 'right' && (
-                    <img src={icon.url} alt="" className="w-5 h-5 ml-2" />
-                )}
-            </a>
+            <Button
+                content={content}
+                size={size}
+                style={style}
+                position={position}
+                uppercase={uppercase}
+                url={url}
+                width={width}
+                icon={icon}
+                iconPosition={iconPosition}
+                target={target}
+                ariaLabel={ariaLabel}
+                customClass={customClass}
+                spacingClasses={spacingClasses}
+            />
         </div>
     );
 }

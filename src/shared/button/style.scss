@@ -1,0 +1,46 @@
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    
+    &.btn-primary {
+        background-color: #0047bb;
+        color: white;
+        
+        &:hover {
+            background-color: #003388;
+        }
+    }
+    
+    &.btn-secondary {
+        background-color: #718096;
+        color: white;
+        
+        &:hover {
+            background-color: #4a5568;
+        }
+    }
+    
+    &.btn-primary-outline {
+        border: 2px solid #0047bb;
+        color: #0047bb;
+        
+        &:hover {
+            background-color: #0047bb;
+            color: white;
+        }
+    }
+    
+    &.btn-secondary-outline {
+        border: 2px solid #718096;
+        color: #718096;
+        
+        &:hover {
+            background-color: #718096;
+            color: white;
+        }
+    }
+}
