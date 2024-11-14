@@ -33,7 +33,15 @@ function processBlockFiles(blockDir, buildDir) {
                     break;
                 case ".scss":
                     log(`Processing SCSS: ${file}`);
-                    mix.sass(srcFile, outputDir);
+                    // Updated SCSS processing with additional options
+                    mix.sass(srcFile, outputDir, {
+                        sassOptions: {
+                            includePaths: [
+                                path.resolve(srcPath, 'shared/styles'),
+                                path.resolve(srcPath)
+                            ]
+                        }
+                    });
                     break;
                 case ".json":
                     log(`Copying JSON: ${file}`);
@@ -189,6 +197,7 @@ mix.webpackConfig({
         alias: {
             "@shared": path.resolve(srcPath, "shared"),
             "@blocks": path.resolve(srcPath, "blocks"),
+            "@styles": path.resolve(srcPath, "shared/styles") // Added alias for styles
         }
     },
 });
@@ -196,7 +205,13 @@ mix.webpackConfig({
 // Disable CSS URL processing and manifest
 mix.options({
     processCssUrls: false,
-    manifest: false
+    manifest: false,
+    sassOptions: {
+        includePaths: [
+            path.resolve(srcPath, 'shared/styles'),
+            path.resolve(srcPath)
+        ]
+    }
 });
 
 // Process all blocks

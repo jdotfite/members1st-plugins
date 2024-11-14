@@ -57,6 +57,7 @@
     },
     "textdomain": "members1st",
     "editorScript": "file:./index.js",
-    "editorStyle": "file:./editor.scss",
-    "style": "file:./style.scss"
+    "editorStyle": "file:./editor.css",
+    "style": "file:./style.css",
+    "viewScript": "file:./view.js"
 }

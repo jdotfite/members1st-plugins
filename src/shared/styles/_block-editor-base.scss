@@ -1,0 +1,206 @@
+// _block-editor-base.scss
+// You can import this into each block's editor.scss
+
+// Block Selection & Focus States
+.wp-block {
+    // Selected state
+    &.is-selected {
+        outline: 2px solid var(--wp-admin-theme-color, #007cba);
+        outline-offset: 2px;
+    }
+
+    // Multi-selection state
+    &.has-multiple-selected {
+        outline-style: dashed;
+    }
+
+    // When block is being dragged
+    &.is-dragging {
+        opacity: 0.9;
+        transform: scale(0.98);
+        transition: all 0.1s ease;
+    }
+}
+
+// Rich Text Editing
+[data-rich-text-placeholder] {
+    opacity: 0.6;
+    
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+// Common Editable Elements
+[contenteditable="true"] {
+    &:hover {
+        outline: 1px dashed rgba(66, 88, 99, 0.4);
+        outline-offset: 2px;
+    }
+    
+    &:focus {
+        outline: 2px solid var(--wp-admin-theme-color, #007cba);
+        outline-offset: 2px;
+    }
+}
+
+// Media Placeholders
+.components-placeholder {
+    background: #f8f9f9;
+    border: 1px dashed #ccc;
+    padding: 1em;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    &__label {
+        font-weight: 600;
+        margin-bottom: 1em;
+    }
+    
+    &__instructions {
+        color: #757575;
+        font-size: 13px;
+        text-align: center;
+        margin: 0 0 1em;
+    }
+    
+    &__fieldset {
+        width: 100%;
+        text-align: center;
+        
+        button {
+            margin: 0.2em;
+        }
+    }
+}
+
+// Inspector Controls (Sidebar)
+.components-panel__body {
+    .components-base-control {
+        margin-bottom: 1.5em;
+        
+        &__label {
+            margin-bottom: 0.5em;
+            display: block;
+        }
+        
+        &__help {
+            color: #757575;
+            font-size: 0.85em;
+            margin-top: 0.2em;
+        }
+    }
+    
+    // Range Control
+    .components-range-control {
+        .components-range-control__root {
+            margin: 1em 0;
+        }
+    }
+    
+    // Color Picker
+    .components-color-palette-control {
+        margin: 1em 0;
+    }
+}
+
+// Empty State Helpers
+.block-editor-block-list__empty-block-inserter {
+    opacity: 0;
+    transition: opacity 0.2s;
+    
+    &:hover {
+        opacity: 1;
+    }
+}
+
+// Responsive Editing Helpers 
+@mixin responsive-preview {
+    .is-desktop-preview & {
+        // Desktop specific styles
+    }
+    
+    .is-tablet-preview & {
+        // Tablet specific styles
+        padding: 1em;
+    }
+    
+    .is-mobile-preview & {
+        // Mobile specific styles
+        padding: 0.8em;
+    }
+}
+
+// Common Block Elements
+.block-common {
+    // Toolbar positioning
+    .block-editor-block-toolbar {
+        transform: translateY(-100%);
+        border: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    // Link control
+    .block-editor-link-control {
+        min-width: 280px;
+        
+        &__search-item {
+            &.is-current {
+                background: #f0f6fc;
+                border-radius: 2px;
+            }
+        }
+    }
+    
+    // Drag handles
+    .components-resizable-box__handle {
+        width: 10px;
+        height: 10px;
+        border: 2px solid var(--wp-admin-theme-color, #007cba);
+        background: white;
+        border-radius: 50%;
+    }
+}
+
+// Helper Classes
+.editor-styles-wrapper {
+    .is-editable {
+        &:hover {
+            outline: 1px dashed rgba(66, 88, 99, 0.4);
+        }
+    }
+    
+    .has-warning {
+        border-left: 4px solid #f0b849;
+        padding-left: 1em;
+    }
+    
+    .has-error {
+        border-left: 4px solid #cc1818;
+        padding-left: 1em;
+    }
+}
+
+// Mobile Optimizations
+@media (max-width: 768px) {
+    .wp-block {
+        .block-editor-block-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            background: white;
+        }
+        
+        // Larger touch targets
+        .components-button {
+            min-height: 36px;
+            
+            &.has-icon {
+                padding: 6px;
+            }
+        }
+    }
+}

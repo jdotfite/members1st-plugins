@@ -74,7 +74,7 @@ export default function Save({ attributes }) {
                         <div className="scroll_icon_wrap">
                             <a
                                 aria-label="Scroll down"
-                                className="scroll_link bloop text--white"
+                                className="absolute bottom-5 w-8"
                                 href="#mission"
                             >
                                 <svg

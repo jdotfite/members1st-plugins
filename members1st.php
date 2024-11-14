@@ -35,18 +35,28 @@ function enqueue_block_assets() {
 
     // Enqueue each block's style
     foreach ($blocks as $block) {
-        $style_file = $blocks_dir . '/' . $block . '/style-index.css';
-        if (file_exists($style_file)) {
-            wp_enqueue_style(
-                "members1st-{$block}",
-                MEMBERS1ST_BLOCKS_PLUGIN_URL . "build/blocks/{$block}/style-index.css",
-                [],
-                filemtime($style_file)
-            );
+        // Check for both style.css and style-index.css
+        $style_files = [
+            $blocks_dir . '/' . $block . '/style.css',
+            $blocks_dir . '/' . $block . '/style-index.css'
+        ];
+        
+        foreach ($style_files as $style_file) {
+            if (file_exists($style_file)) {
+                $style_path = str_replace(MEMBERS1ST_BLOCKS_PLUGIN_PATH, '', $style_file);
+                wp_enqueue_style(
+                    "members1st-{$block}",
+                    MEMBERS1ST_BLOCKS_PLUGIN_URL . $style_path,
+                    [],
+                    filemtime($style_file)
+                );
+                break; // Use the first style file found
+            }
         }
     }
 }
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_block_assets');
+add_action('enqueue_block_assets', __NAMESPACE__ . '\enqueue_block_assets'); // Also load styles in editor
 
 /**
  * Auto enqueue all block editor assets
@@ -70,8 +80,9 @@ function enqueue_block_editor_assets() {
         return is_dir($blocks_dir . '/' . $item) && !in_array($item, ['.', '..']);
     });
 
-    // Enqueue each block's script
+    // Enqueue each block's script and editor styles
     foreach ($blocks as $block) {
+        // Enqueue editor script
         $script_file = $blocks_dir . '/' . $block . '/index.js';
         if (file_exists($script_file)) {
             wp_enqueue_script(
@@ -80,6 +91,17 @@ function enqueue_block_editor_assets() {
                 $deps,
                 filemtime($script_file),
                 true
+            );
+        }
+
+        // Enqueue editor styles
+        $editor_style_file = $blocks_dir . '/' . $block . '/editor.css';
+        if (file_exists($editor_style_file)) {
+            wp_enqueue_style(
+                "members1st-{$block}-editor",
+                MEMBERS1ST_BLOCKS_PLUGIN_URL . "build/blocks/{$block}/editor.css",
+                [],
+                filemtime($editor_style_file)
             );
         }
     }
@@ -134,4 +156,17 @@ add_action('plugins_loaded', __NAMESPACE__ . '\auto_load_components');
 register_activation_hook(__FILE__, __NAMESPACE__ . '\activate');
 function activate() {
     // Code to run on activation, if needed.
+}
+
+// Add debugging if WP_DEBUG is enabled
+if (defined('WP_DEBUG') && WP_DEBUG) {
+    add_action('wp_print_styles', function() {
+        error_log('=== Members1st Registered Styles ===');
+        global $wp_styles;
+        foreach($wp_styles->registered as $handle => $style) {
+            if (strpos($handle, 'members1st') !== false) {
+                error_log($handle . ' => ' . $style->src);
+            }
+        }
+    });
 }

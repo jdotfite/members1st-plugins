@@ -5,6 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@shared/button';
 import { OPACITY_OPTIONS, OPACITY_CHOICES } from '@shared/constants/opacity';
 
+
 export default function Edit({ attributes, setAttributes }) {
     const {
         backgroundImage,
@@ -21,6 +22,7 @@ export default function Edit({ attributes, setAttributes }) {
     } = attributes;
 
     const blockProps = useBlockProps();
+    
 
     return (
         <>
@@ -183,7 +185,7 @@ export default function Edit({ attributes, setAttributes }) {
                             <div className="scroll_icon_wrap">
                                 <a
                                     aria-label="Scroll down"
-                                    className="scroll_link bloop text--white"
+                                    className="absolute bottom-5  w-8"
                                     href="#mission"
                                 >
                                     <svg
