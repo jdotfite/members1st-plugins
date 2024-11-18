@@ -22,9 +22,9 @@ function enqueue_editor_assets() {
     if ($screen && $screen->is_block_editor) {
         wp_enqueue_script(
             "members1st-color-mode-toggle",
-            plugins_url("build/features/color-mode-toggle/index.js", MEMBERS1ST_BLOCKS_PLUGIN_FILE),
+            plugins_url("dist/features/color-mode-toggle/index.js", MEMBERS1ST_BLOCKS_PLUGIN_FILE),
             array("wp-plugins", "wp-element", "wp-edit-post"),
-            filemtime(MEMBERS1ST_BLOCKS_PLUGIN_PATH . "build/features/color-mode-toggle/index.js"),
+            filemtime(MEMBERS1ST_BLOCKS_PLUGIN_PATH . "dist/features/color-mode-toggle/index.js"),
             true
         );
     }

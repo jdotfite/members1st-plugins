@@ -109,12 +109,10 @@
 
 // Empty State Helpers
 .block-editor-block-list__empty-block-inserter {
-    opacity: 0;
-    transition: opacity 0.2s;
-    
-    &:hover {
-        opacity: 1;
-    }
+    margin-top:-2px;
+}
+.block-editor-block-list__empty-block-inserter .block-editor-inserter__toggle.components-button.has-icon {
+    height:23px;
 }
 
 // Responsive Editing Helpers 

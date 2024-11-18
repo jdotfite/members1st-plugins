@@ -18,12 +18,12 @@ if (!defined("ABSPATH")) {
  */
 function enqueue_assets() {
     // Only enqueue if file exists
-    $style_path = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/shared/spacing-control/index.css';
+    $style_path = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'dist/shared/spacing-control/index.css';
     
     if (file_exists($style_path)) {
         wp_register_style(
             "members1st-blocks-spacing-control",
-            plugins_url("build/shared/spacing-control/index.css", MEMBERS1ST_BLOCKS_PLUGIN_FILE),
+            plugins_url("dist/shared/spacing-control/index.css", MEMBERS1ST_BLOCKS_PLUGIN_FILE),
             array(),
             filemtime($style_path)
         );

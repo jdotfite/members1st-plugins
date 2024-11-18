@@ -25,7 +25,7 @@ define('MEMBERS1ST_BLOCKS_PLUGIN_URL', plugin_dir_url(__FILE__));
  * Auto enqueue all block assets
  */
 function enqueue_block_assets() {
-    $blocks_dir = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks';
+    $blocks_dir = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'dist/blocks';
     if (!is_dir($blocks_dir)) return;
 
     // Get all block directories
@@ -72,7 +72,7 @@ function enqueue_block_editor_assets() {
         'wp-plugins'
     ];
 
-    $blocks_dir = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'build/blocks';
+    $blocks_dir = MEMBERS1ST_BLOCKS_PLUGIN_PATH . 'dist/blocks';
     if (!is_dir($blocks_dir)) return;
 
     // Get all block directories
@@ -87,7 +87,7 @@ function enqueue_block_editor_assets() {
         if (file_exists($script_file)) {
             wp_enqueue_script(
                 "members1st-{$block}",
-                MEMBERS1ST_BLOCKS_PLUGIN_URL . "build/blocks/{$block}/index.js",
+                MEMBERS1ST_BLOCKS_PLUGIN_URL . "dist/blocks/{$block}/index.js",
                 $deps,
                 filemtime($script_file),
                 true
@@ -99,7 +99,7 @@ function enqueue_block_editor_assets() {
         if (file_exists($editor_style_file)) {
             wp_enqueue_style(
                 "members1st-{$block}-editor",
-                MEMBERS1ST_BLOCKS_PLUGIN_URL . "build/blocks/{$block}/editor.css",
+                MEMBERS1ST_BLOCKS_PLUGIN_URL . "dist/blocks/{$block}/editor.css",
                 [],
                 filemtime($editor_style_file)
             );

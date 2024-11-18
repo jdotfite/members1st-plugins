@@ -7,12 +7,12 @@ function log(message, data = null) {
     if (data) console.log(data);
 }
 
-function processBlockFiles(blockDir, buildDir) {
+function processBlockFiles(blockDir, distDir) {
     log(`Processing block: ${path.basename(blockDir)}`);
     
-    // Ensure build directory exists
-    if (!fs.existsSync(buildDir)) {
-        fs.mkdirSync(buildDir, { recursive: true });
+    // Ensure dist directory exists
+    if (!fs.existsSync(distDir)) {
+        fs.mkdirSync(distDir, { recursive: true });
     }
 
     const files = fs.readdirSync(blockDir);
@@ -33,7 +33,6 @@ function processBlockFiles(blockDir, buildDir) {
                     break;
                 case ".scss":
                     log(`Processing SCSS: ${file}`);
-                    // Updated SCSS processing with additional options
                     mix.sass(srcFile, outputDir, {
                         sassOptions: {
                             includePaths: [
@@ -45,7 +44,7 @@ function processBlockFiles(blockDir, buildDir) {
                     break;
                 case ".json":
                     log(`Copying JSON: ${file}`);
-                    fs.copyFileSync(srcFile, path.join(buildDir, file));
+                    fs.copyFileSync(srcFile, path.join(distDir, file));
                     break;
                 default:
                     log(`Skipping unsupported file: ${file}`);
@@ -54,11 +53,11 @@ function processBlockFiles(blockDir, buildDir) {
     });
 }
 
-function processFeatureFiles(featureDir, buildDir) {
+function processFeatureFiles(featureDir, distDir) {
     log(`Processing feature: ${path.basename(featureDir)}`);
     
-    if (!fs.existsSync(buildDir)) {
-        fs.mkdirSync(buildDir, { recursive: true });
+    if (!fs.existsSync(distDir)) {
+        fs.mkdirSync(distDir, { recursive: true });
     }
 
     const files = fs.readdirSync(featureDir);
@@ -68,8 +67,8 @@ function processFeatureFiles(featureDir, buildDir) {
         const stats = fs.statSync(srcFile);
         
         if (stats.isDirectory()) {
-            const subBuildDir = path.join(buildDir, file);
-            processFeatureFiles(srcFile, subBuildDir);
+            const subDistDir = path.join(distDir, file);
+            processFeatureFiles(srcFile, subDistDir);
         } else {
             const ext = path.extname(file);
             const featureName = path.basename(featureDir);
@@ -86,7 +85,7 @@ function processFeatureFiles(featureDir, buildDir) {
                     break;
                 case ".json":
                     log(`Copying JSON: ${file}`);
-                    fs.copyFileSync(srcFile, path.join(buildDir, file));
+                    fs.copyFileSync(srcFile, path.join(distDir, file));
                     break;
                 default:
                     log(`Skipping unsupported file: ${file}`);
@@ -95,11 +94,11 @@ function processFeatureFiles(featureDir, buildDir) {
     });
 }
 
-function processSharedFiles(componentDir, buildDir) {
+function processSharedFiles(componentDir, distDir) {
     log(`Processing shared component: ${path.basename(componentDir)}`);
     
-    if (!fs.existsSync(buildDir)) {
-        fs.mkdirSync(buildDir, { recursive: true });
+    if (!fs.existsSync(distDir)) {
+        fs.mkdirSync(distDir, { recursive: true });
     }
 
     const files = fs.readdirSync(componentDir);
@@ -109,8 +108,8 @@ function processSharedFiles(componentDir, buildDir) {
         const stats = fs.statSync(srcFile);
         
         if (stats.isDirectory()) {
-            const subBuildDir = path.join(buildDir, file);
-            processSharedFiles(srcFile, subBuildDir);
+            const subDistDir = path.join(distDir, file);
+            processSharedFiles(srcFile, subDistDir);
         } else {
             const ext = path.extname(file);
             const componentName = path.basename(componentDir);
@@ -127,7 +126,7 @@ function processSharedFiles(componentDir, buildDir) {
                     break;
                 case ".json":
                     log(`Copying JSON: ${file}`);
-                    fs.copyFileSync(srcFile, path.join(buildDir, file));
+                    fs.copyFileSync(srcFile, path.join(distDir, file));
                     break;
                 default:
                     log(`Skipping unsupported file: ${file}`);
@@ -142,7 +141,7 @@ const srcPath = path.join(pluginPath, "src");
 const blocksPath = path.join(srcPath, "blocks");
 const featuresPath = path.join(srcPath, "features");
 const sharedPath = path.join(srcPath, "shared");
-const buildPath = path.join(pluginPath, "build");
+const distPath = path.join(pluginPath, "dist");
 
 log("Build configuration:", {
     pluginPath,
@@ -150,13 +149,13 @@ log("Build configuration:", {
     blocksPath,
     featuresPath,
     sharedPath,
-    buildPath
+    distPath
 });
 
-// Clean build directory
-if (fs.existsSync(buildPath)) {
-    log("Cleaning build directory...");
-    fs.rmSync(buildPath, { recursive: true, force: true });
+// Clean dist directory
+if (fs.existsSync(distPath)) {
+    log("Cleaning dist directory...");
+    fs.rmSync(distPath, { recursive: true, force: true });
 }
 
 // Set Mix configuration
@@ -166,7 +165,7 @@ mix.setPublicPath("./");
 // Configure webpack
 mix.webpackConfig({
     output: {
-        path: path.resolve(buildPath),
+        path: path.resolve(distPath),
         publicPath: "",
         filename: "[name].js",
         clean: true,
@@ -197,7 +196,7 @@ mix.webpackConfig({
         alias: {
             "@shared": path.resolve(srcPath, "shared"),
             "@blocks": path.resolve(srcPath, "blocks"),
-            "@styles": path.resolve(srcPath, "shared/styles") // Added alias for styles
+            "@styles": path.resolve(srcPath, "shared/styles")
         }
     },
 });
@@ -221,8 +220,8 @@ if (fs.existsSync(blocksPath)) {
     blocks.forEach(block => {
         if (block.isDirectory()) {
             const blockDir = path.join(blocksPath, block.name);
-            const blockBuildDir = path.join(buildPath, "blocks", block.name);
-            processBlockFiles(blockDir, blockBuildDir);
+            const blockDistDir = path.join(distPath, "blocks", block.name);
+            processBlockFiles(blockDir, blockDistDir);
         }
     });
 }
@@ -234,8 +233,8 @@ if (fs.existsSync(sharedPath)) {
     components.forEach(component => {
         if (component.isDirectory()) {
             const componentDir = path.join(sharedPath, component.name);
-            const componentBuildDir = path.join(buildPath, "shared", component.name);
-            processSharedFiles(componentDir, componentBuildDir);
+            const componentDistDir = path.join(distPath, "shared", component.name);
+            processSharedFiles(componentDir, componentDistDir);
         }
     });
 }
@@ -247,8 +246,8 @@ if (fs.existsSync(featuresPath)) {
     features.forEach(feature => {
         if (feature.isDirectory()) {
             const featureDir = path.join(featuresPath, feature.name);
-            const featureBuildDir = path.join(buildPath, "features", feature.name);
-            processFeatureFiles(featureDir, featureBuildDir);
+            const featureDistDir = path.join(distPath, "features", feature.name);
+            processFeatureFiles(featureDir, featureDistDir);
         }
     });
 }
@@ -276,6 +275,6 @@ mix.then(() => {
         });
     }
     
-    log("Build directory contents:");
-    listFiles(buildPath);
+    log("Dist directory contents:");
+    listFiles(distPath);
 });
